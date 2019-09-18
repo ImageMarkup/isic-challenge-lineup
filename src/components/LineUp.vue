@@ -5,7 +5,7 @@
 <script lang="ts">
 import { Component, Prop, Vue, Watch, Emit } from 'vue-property-decorator';
 import { ISubmissionSummary } from '../model';
-import { builder, Taggle, LocalDataProvider, buildStringColumn, buildNumberColumn, buildRanking, buildBooleanColumn, buildCategoricalColumn } from 'lineupjs';
+import { builder, Taggle, LocalDataProvider, buildStringColumn, buildNumberColumn, buildRanking, buildBooleanColumn, buildCategoricalColumn, buildActionsColumn } from 'lineupjs';
 
 
 @Component
@@ -61,6 +61,14 @@ export default class LineUp extends Vue {
       .custom('accessor', (row: {v: ISubmissionSummary}) => row.v.approach_uses_external_data ? 'y' : 'n'));
 
     b.column(buildNumberColumn('overall_score', [0, 1]).label('Score'));
+
+    b.column(buildActionsColumn().label('&nbsp;').width(30).action({
+      name: 'Show Details',
+      icon: 'zoom_in',
+      className: 'material-icons cursor',
+      action: (row: {v: ISubmissionSummary}) => this.open(row.v)
+    }));
+
     b.deriveColors();
 
     b.ranking(buildRanking()
@@ -121,6 +129,10 @@ export default class LineUp extends Vue {
 
 .lu-renderer-rank {
   align-items: center;
+}
+
+.material-icons.cursor {
+  cursor: pointer;
 }
 
 //  flex-direction: column;
