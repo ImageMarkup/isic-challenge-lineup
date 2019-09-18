@@ -41,6 +41,11 @@ export default class Analyze extends Vue {
     this.fetchData();
   }
 
+  @Watch('challenge')
+  private onChallengeChanged() {
+    this.fetchData();
+  }
+
   private fetchData() {
     this.submissions = [];
     getByTeam(this.baseUrl, this.challenge).then((data) => this.submissions = data.results);
