@@ -1,5 +1,5 @@
 <template>
-  <LineUp baseUrl="https://challenge.isic-archive.com/api/"/>
+  <LineUp baseUrl="https://challenge.isic-archive.com/api/leaderboard/52"/>
 </template>
 
 <script lang="ts">
