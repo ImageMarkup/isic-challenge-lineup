@@ -58,7 +58,12 @@ export default class Analyze extends Vue {
 
   private fetchData() {
     this.submissions = [];
-    getByTeam(this.baseUrl, this.challenge).then((data) => this.submissions = data.results);
+    getByTeam(this.baseUrl, this.challenge).then((data) => {
+      this.submissions = data.results;
+      for (const s of this.submissions) {
+        fetchDetails(this.baseUrl, s);
+      }
+    });
   }
 
   private open(s: ISubmissionSummary) {
@@ -67,7 +72,6 @@ export default class Analyze extends Vue {
       return;
     }
     fetchDetails(this.baseUrl, s).then((details) => {
-      s.details = details;
       this.focus = s;
     });
   }
