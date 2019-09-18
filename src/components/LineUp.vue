@@ -34,13 +34,13 @@ export default class LineUp extends Vue {
 
     const generateApproach = (v: ISubmissionSummary) => {
       if (v.approach_manuscript_url) {
-        return `<a class="instituteLink" href="${v.approach_manuscript_url}" target="blank" rel="noopener">${v.approach_name}</a>`;
+        return `<a href="${v.approach_manuscript_url}" target="blank" rel="noopener">${v.approach_name}</a>`;
       }
       return v.approach_name;
     };
 
     b.column(buildStringColumn('team_name')
-      .label('Team').html().width(400)
+      .label('Team').html().width(300)
       .custom('accessor', (row: {v: ISubmissionSummary}) => generateName(row.v)));
     b.column(buildStringColumn('approach_name')
       .label('Approach').html().width(400)
@@ -72,7 +72,7 @@ export default class LineUp extends Vue {
     b.deriveColors();
 
     b.ranking(buildRanking()
-      .rank().selection().allColumns()
+      .aggregate().rank().selection().allColumns()
       .sortBy('overall_score', 'desc')
     );
 
@@ -124,6 +124,7 @@ export default class LineUp extends Vue {
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
+    font-size: 80%;
   }
 }
 
