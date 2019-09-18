@@ -14,7 +14,8 @@ export function getByApproach(baseUrl: string, challenge: string): Promise<ISumm
 function parseDetails(data: IRawSubmissionDetails): ISubmissionDetails {
   return {
     overall: data.overall,
-    validation: data.validation
+    validation: data.validation,
+    ...data.macro_average
   };
 }
 

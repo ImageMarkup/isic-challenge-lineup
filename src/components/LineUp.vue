@@ -16,6 +16,12 @@ export default class LineUp extends Vue {
   })
   private data!: ISubmissionSummary[];
 
+  @Prop({
+    required: true,
+    default: () => []
+  })
+  private selection!: number[];
+
   private lineup: Taggle | null = null;
 
   public mounted() {
@@ -77,6 +83,9 @@ export default class LineUp extends Vue {
     );
 
     this.lineup = b.buildTaggle(this.$el as HTMLElement);
+    this.lineup.on('selectionChanged', (indices) => {
+      this.$emit('selectionChanged', indices);
+    });
 
     this.patchLineUp();
   }
@@ -96,6 +105,11 @@ export default class LineUp extends Vue {
   private onDataChanged() {
     // render lineup
     (this.lineup!.data as LocalDataProvider).setData(this.data);
+  }
+
+  @Watch('selection')
+  private onSelectionChanged() {
+    this.lineup!.setSelection(this.selection);
   }
 
   @Emit('open')

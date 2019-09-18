@@ -78,7 +78,7 @@ export interface IRawSubmissionDetails {
 }
 
 
-export interface ISubmissionDetails {
+export interface ISubmissionDetails extends IScore {
   overall: number;
   validation: number;
 }
