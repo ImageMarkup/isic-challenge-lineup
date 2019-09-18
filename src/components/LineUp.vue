@@ -5,7 +5,7 @@
 <script lang="ts">
 import { Component, Prop, Vue, Watch, Emit } from 'vue-property-decorator';
 import { ISubmissionSummary } from '../model';
-import { builder, Taggle, LocalDataProvider } from 'lineupjs';
+import { builder, Taggle, LocalDataProvider, buildStringColumn, buildNumberColumn, buildRanking, buildBooleanColumn, buildCategoricalColumn } from 'lineupjs';
 
 
 @Component
@@ -19,7 +19,54 @@ export default class LineUp extends Vue {
   private lineup: Taggle | null = null;
 
   public mounted() {
-    const b = builder(this.data)
+    const b = builder(this.data);
+        // {
+        //   text: 'Used External Data',
+        //   subText: `${this.usedExternalCount} yes`,
+        //   value: 'approach_uses_external_data',
+        // },
+
+    b.rowHeight(32, 2);
+
+    const generateName = (v: ISubmissionSummary) => {
+      return `${v.team_name}<br>${v.team_institution_name ? `<a class="instituteLink" href="${v.team_institution_url}" target="blank" rel="noopener">${v.team_institution_name}</a>` : ''}`;
+    };
+
+    const generateApproach = (v: ISubmissionSummary) => {
+      if (v.approach_manuscript_url) {
+        return `<a class="instituteLink" href="${v.approach_manuscript_url}" target="blank" rel="noopener">${v.approach_name}</a>`;
+      }
+      return v.approach_name;
+    };
+
+    b.column(buildStringColumn('team_name')
+      .label('Team').html().width(400)
+      .custom('accessor', (row: {v: ISubmissionSummary}) => generateName(row.v)));
+    b.column(buildStringColumn('approach_name')
+      .label('Approach').html().width(400)
+      .custom('accessor', (row: {v: ISubmissionSummary}) => generateApproach(row.v)));
+
+    b.column(buildCategoricalColumn('approach_uses_external_data').categories([
+      {
+        label: 'yes',
+        name: 'y',
+        color: 'darkgreen'
+      },
+      {
+        label: 'no',
+        name: 'n',
+        color: 'darkred'
+      }
+    ]).label('Used External Data')
+      .custom('accessor', (row: {v: ISubmissionSummary}) => row.v.approach_uses_external_data ? 'y' : 'n'));
+
+    b.column(buildNumberColumn('overall_score', [0, 1]).label('Score'));
+    b.deriveColors();
+
+    b.ranking(buildRanking()
+      .rank().selection().allColumns()
+      .sortBy('overall_score', 'desc')
+    );
 
     this.lineup = b.buildTaggle(this.$el as HTMLElement);
 
@@ -47,39 +94,6 @@ export default class LineUp extends Vue {
   private open(s: ISubmissionSummary) {
     return s;
   }
-
-
-// {
-//           text: 'Rank',
-//           subText: `${this.submissionsCount} total`,
-//           value: 'rank',
-//         },
-//         {
-//           text: 'Team',
-//           subText: `${this.uniqueTeamCount} unique teams`,
-//           value: 'team_name',
-//         },
-//         {
-//           text: 'Approach Name',
-//           value: 'approach_name ',
-//           sortable: false,
-//         },
-//         {
-//           text: 'Manuscript',
-//           subText: this.admin ? `${this.missingManuscriptCount} missing` : null,
-//           value: 'approach_manuscript_url',
-//           sortable: false,
-//         },
-//         {
-//           text: 'Used External Data',
-//           subText: `${this.usedExternalCount} yes`,
-//           value: 'approach_uses_external_data',
-//         },
-//         {
-//           text: 'Primary Metric Value',
-//           subText: this.task.primaryMetricName,
-//           value: 'overall_score',
-//         },
 }
 </script>
 
@@ -92,5 +106,23 @@ export default class LineUp extends Vue {
   right: 2px;
   bottom: 2px;
 }
+
+.le-td.lu-renderer-string[data-group=d] {
+  white-space: unset !important;
+  flex-direction: column;
+  align-items: start;
+
+  > .instituteLink {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+}
+
+.lu-renderer-rank {
+  align-items: center;
+}
+
+//  flex-direction: column;
 
 </style>
