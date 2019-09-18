@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="wrapper">
     <LineUp :data="submissions" @open="open($event)"/>
     <details-dialog v-if="focus" :submission="focus" />
   </div>
@@ -68,3 +68,9 @@ export default class Analyze extends Vue {
 }
 
 </script>
+
+<style lang="scss" scoped>
+.wrapper {
+  position: relative;
+}
+</style>

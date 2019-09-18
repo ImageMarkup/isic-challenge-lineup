@@ -39,24 +39,40 @@ export default class App extends Vue {
 </script>
 
 <style lang="scss">
-@import '~materialize-css/sass/materialize';
-@import '~material-design-icons/iconfont/material-icons.css';
+
 
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
+  width: 100vw;
+  height: 100vh;
   display: flex;
   flex-direction: column;
 
-  > :not(nav) {
+  > main {
     flex: 1 1 0;
+    display: flex;
+    flex-direction: column;
+
+    > * {
+      flex: 1 1 0;
+    }
   }
 
   > nav form {
     display: flex;
   }
 }
+
+@import '~materialize-css/sass/components/color-variables';
+@import '~materialize-css/sass/components/color-classes';
+@import '~material-design-icons/iconfont/material-icons.css';
+
+@import './styles/materialize';
+@import './styles/lineup';
+@import './styles/material';
+
 
 </style>

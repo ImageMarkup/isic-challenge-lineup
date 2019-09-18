@@ -1,29 +1,11 @@
 <template>
-  <table>
-    <thead>
-      <tr>
-        <th>Team Name</th>
-        <th>Score</th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr v-for="s in data" :key="s.submission_id">
-        <td>{{s.team_name}}</td>
-        <td>{{s.overall_score}}</td>
-        <td>
-          <a class="waves-effect waves-light btn-flat btn-small" @click="open(s)">
-            <i class="material-icons">edit</i>
-          </a>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+  <div class="lu" />
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue, Watch, Emit } from 'vue-property-decorator';
 import { ISubmissionSummary } from '../model';
+import { builder, Taggle, LocalDataProvider } from 'lineupjs';
 
 
 @Component
@@ -34,18 +16,81 @@ export default class LineUp extends Vue {
   })
   private data!: ISubmissionSummary[];
 
+  private lineup: Taggle | null = null;
+
+  public mounted() {
+    const b = builder(this.data)
+
+    this.lineup = b.buildTaggle(this.$el as HTMLElement);
+
+    this.patchLineUp();
+  }
+
+  private patchLineUp() {
+    // patch switch button
+    const side = this.$el.querySelector<HTMLElement>('.lu-rule-button-chooser');
+    if (side) {
+      side.classList.add('switch');
+      const input = side.querySelector<HTMLElement>('input')!;
+      input.insertAdjacentHTML('afterend', `<span class="lever"></span>`);
+      input.insertAdjacentHTML('beforebegin', `<span>Item</span>`);
+    }
+  }
+
   @Watch('data')
-  private onBaseUrlChanged() {
+  private onDataChanged() {
     // render lineup
+    (this.lineup!.data as LocalDataProvider).setData(this.data);
   }
 
   @Emit('open')
   private open(s: ISubmissionSummary) {
     return s;
   }
+
+
+// {
+//           text: 'Rank',
+//           subText: `${this.submissionsCount} total`,
+//           value: 'rank',
+//         },
+//         {
+//           text: 'Team',
+//           subText: `${this.uniqueTeamCount} unique teams`,
+//           value: 'team_name',
+//         },
+//         {
+//           text: 'Approach Name',
+//           value: 'approach_name ',
+//           sortable: false,
+//         },
+//         {
+//           text: 'Manuscript',
+//           subText: this.admin ? `${this.missingManuscriptCount} missing` : null,
+//           value: 'approach_manuscript_url',
+//           sortable: false,
+//         },
+//         {
+//           text: 'Used External Data',
+//           subText: `${this.usedExternalCount} yes`,
+//           value: 'approach_uses_external_data',
+//         },
+//         {
+//           text: 'Primary Metric Value',
+//           subText: this.task.primaryMetricName,
+//           value: 'overall_score',
+//         },
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
+
+.lu {
+  position: absolute !important;
+  left: 2px;
+  top: 5px;
+  right: 2px;
+  bottom: 2px;
+}
 
 </style>
