@@ -5,13 +5,13 @@
       <p>{{submission.details.overall}}</p>
     </div>
     <div class="modal-footer">
-      <a href="#!" class="modal-close waves-effect waves-green btn-flat" @click="this.$emit('close')">Close</a>
+      <a href="#!" class="modal-close waves-effect btn-flat">Close</a>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop, Watch } from 'vue-property-decorator';
+import { Component, Vue, Prop, Watch, Emit } from 'vue-property-decorator';
 import {Modal} from 'materialize-css';
 import { ISubmissionSummary } from '../model';
 
@@ -24,14 +24,15 @@ export default class DetailsDialog extends Vue {
   private submission!: ISubmissionSummary;
 
   public mounted() {
-    Modal.init(this.$el, {}).open();
+    Modal.init(this.$el, {
+      onCloseEnd: () => this.$emit('close')
+    }).open();
   }
 
   @Watch('submission')
   private onSubmissionChanged() {
     Modal.getInstance(this.$el).open();
   }
-
 }
 
 </script>
