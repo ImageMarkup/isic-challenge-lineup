@@ -4,11 +4,12 @@
       <div class="nav-wrapper">
         <form>
           <input id="baseUrl" placeholder="Base URL" v-model="baseUrl" required>
+          <input type="number" id="challenge" placeholder="Challenge" v-model="challenge" required>
         </form>
       </div>
     </nav>
     <main>
-      <Analyze :baseUrl="baseUrl"/>
+      <Analyze :baseUrl="baseUrl" :challenge="challenge"/>
     </main>
   </div>
 </template>
@@ -27,7 +28,8 @@ import { getByTeam } from './rest';
   },
 })
 export default class App extends Vue {
-  private baseUrl = 'https://challenge.isic-archive.com/api/leaderboard/52';
+  private baseUrl = 'https://challenge.isic-archive.com/api';
+  private challenge = '52';
 
   public mounted() {
     M.AutoInit();
@@ -38,6 +40,7 @@ export default class App extends Vue {
 
 <style lang="scss">
 @import '~materialize-css/sass/materialize';
+@import '~material-design-icons/iconfont/material-icons.css';
 
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
@@ -49,6 +52,10 @@ export default class App extends Vue {
 
   > :not(nav) {
     flex: 1 1 0;
+  }
+
+  > nav form {
+    display: flex;
   }
 }
 

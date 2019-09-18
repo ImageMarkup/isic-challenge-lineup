@@ -10,6 +10,7 @@
   "dependencies": {
     "@types/materialize-css": "^1.0.6",
     "lineupjs": "^4.0.0-alpha.11",
+    "material-design-icons": "^3.0.1",
     "materialize-css": "^1.0.0-rc.2",
     "reflect-metadata": "^0.1.13",
     "register-service-worker": "^1.6.2",

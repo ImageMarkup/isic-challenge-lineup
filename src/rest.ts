@@ -3,12 +3,12 @@ import { ISummaryResponse, ISubmissionSummary, IRawSubmissionDetails, ISubmissio
 
 // https://challenge.isic-archive.com/api/leaderboard/52/by-team?limit=200&offset=0
 
-export function getByTeam(baseUrl: string): Promise<ISummaryResponse> {
-  return fetch(`${baseUrl}/by-team`).then((r) => r.json());
+export function getByTeam(baseUrl: string, challenge: string): Promise<ISummaryResponse> {
+  return fetch(`${baseUrl}/leaderboard/${challenge}/by-team`).then((r) => r.json());
 }
 
-export function getByApproach(baseUrl: string): Promise<ISummaryResponse> {
-  return fetch(`${baseUrl}/by-approach`).then((r) => r.json());
+export function getByApproach(baseUrl: string, challenge: string): Promise<ISummaryResponse> {
+  return fetch(`${baseUrl}/leaderboard/${challenge}/by-approach`).then((r) => r.json());
 }
 
 function parseDetails(data: IRawSubmissionDetails): ISubmissionDetails {
