@@ -6,9 +6,5 @@ import './registerServiceWorker';
 Vue.config.productionTip = false;
 
 new Vue({
-  render: (h) => h(App, {
-    props: {
-      baseUrl: 'https://challenge.isic-archive.com/api/leaderboard/52'
-    }
-  }),
+  render: (h) => h(App),
 }).$mount('#app');

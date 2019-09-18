@@ -24,7 +24,7 @@ import { ISubmissionSummary } from '../model';
 export default class LineUp extends Vue {
   @Prop({
     required: true,
-    default: []
+    default: () => []
   })
   private data!: ISubmissionSummary[];
 
