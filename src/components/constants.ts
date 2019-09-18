@@ -1,3 +1,5 @@
+import { schemeSet3 } from 'd3-scale-chromatic';
+
 export const aggregateMetricTypes = [
   {
     id: 'balanced_accuracy',
@@ -27,6 +29,8 @@ export const integralMetricTypes = [
     detail: 'Area under the interpolated precision-recall (PR) curve',
   },
 ];
+
+
 
 export const thresholdMetricTypes = [
   {
@@ -100,4 +104,4 @@ export const possibleCategories = [
     id: 'UNK',
     name: 'None of the others / out of distribution',
   }
-];
+].map((d, i) => Object.assign(d, { color: schemeSet3[i]}));

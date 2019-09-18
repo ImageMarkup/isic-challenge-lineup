@@ -19,7 +19,8 @@ function parseDetails(data: IRawSubmissionDetails): ISubmissionDetails {
   return {
     overall: data.overall,
     validation: data.validation,
-    ...data.macro_average
+    ...data.macro_average,
+    raw: data
   };
 }
 

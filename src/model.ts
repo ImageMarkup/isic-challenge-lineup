@@ -56,6 +56,8 @@ export const enum EClass {
   VASC = 'VASC'
 }
 
+export declare type ECategory = 'AK' | 'BCC' | 'BKL' | 'DF' | 'MEL' | 'NV' | 'SCC' | 'UNK' | 'VASC';
+
 export interface IRawSubmissionDetails {
   overall: number;
   validation: number;
@@ -81,4 +83,6 @@ export interface IRawSubmissionDetails {
 export interface ISubmissionDetails extends IScore {
   overall: number;
   validation: number;
+
+  raw: IRawSubmissionDetails;
 }

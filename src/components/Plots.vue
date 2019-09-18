@@ -1,17 +1,23 @@
 <template>
   <aside class="plots">
-    <div v-for="s in selection" :key="s.submission_id">
-      {{s.submission_id}}
+    <div class="wrapper">
+      <article v-for="s in selection" :key="s.submission_id">
+        <h6>{{s.team_name}} ({{s.overall_score}})</h6>
+        <roc-chart :summary="s" />
+      </article>
     </div>
   </aside>
 </template>
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator';
-import {Modal} from 'materialize-css';
+import RocChart from './RocChart';
 import { ISubmissionSummary } from '../model';
 
 @Component({
+  components: {
+    RocChart
+  }
 })
 export default class Plots extends Vue {
   @Prop({
@@ -21,3 +27,15 @@ export default class Plots extends Vue {
 }
 
 </script>
+<style lang="scss" scoped>
+.plots {
+  display: flex;
+  flex-direction: column;
+}
+
+.wrapper {
+  flex: 1 1 0;
+  overflow: auto;
+}
+
+</style>
