@@ -7,6 +7,8 @@ Vue.config.productionTip = false;
 
 new Vue({
   render: (h) => h(App, {
-    baseUrl:
+    props: {
+      baseUrl: 'https://challenge.isic-archive.com/api/leaderboard/52'
+    }
   }),
 }).$mount('#app');

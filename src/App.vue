@@ -1,10 +1,12 @@
 <template>
-  <LineUp baseUrl="https://challenge.isic-archive.com/api/leaderboard/52"/>
+  <LineUp :data="submissions"/>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Vue, Prop, Watch } from 'vue-property-decorator';
 import LineUp from './components/LineUp.vue';
+import { ISubmissionSummary } from './model';
+import { getByTeam } from './rest';
 
 @Component({
   components: {
@@ -12,7 +14,25 @@ import LineUp from './components/LineUp.vue';
   },
 })
 export default class App extends Vue {
+  @Prop({
+    required: true
+  })
+  private baseUrl!: string;
 
+  private submissions: ISubmissionSummary[] = [];
+
+  public created() {
+    this.fetchData();
+  }
+
+  @Watch('baseUrl')
+  private onBaseUrlChanged() {
+    this.fetchData();
+  }
+
+  private fetchData() {
+    getByTeam(this.baseUrl).then((data) => this.submissions = data.results);
+  }
 }
 
 </script>
