@@ -10,7 +10,8 @@
   },
   "rules": {
     "indent": [true, "spaces", 2],
-    "interface-name": false,
+    "interface-name": true,
+    "trailing-comma": "never",
     "no-consecutive-blank-lines": false,
     "object-literal-sort-keys": false,
     "ordered-imports": false,

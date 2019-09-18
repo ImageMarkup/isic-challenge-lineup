@@ -1,12 +1,21 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
-  </div>
+  <LineUp baseUrl="https://challenge.isic-archive.com/api/"/>
 </template>
+
+<script lang="ts">
+import { Component, Vue } from 'vue-property-decorator';
+import LineUp from './components/LineUp.vue';
+
+@Component({
+  components: {
+    LineUp
+  },
+})
+export default class App extends Vue {
+
+}
+
+</script>
 
 <style>
 #app {
