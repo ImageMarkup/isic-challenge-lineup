@@ -6,6 +6,8 @@
 import { Component, Prop, Vue, Watch, Emit } from 'vue-property-decorator';
 import { ISubmissionSummary } from '../model';
 import { builder, Taggle, LocalDataProvider, buildStringColumn, buildNumberColumn, buildRanking, buildBooleanColumn, buildCategoricalColumn, buildActionsColumn } from 'lineupjs';
+import { debounce } from 'lodash';
+import { integralMetricTypes, thresholdMetricTypes } from './constants';
 
 
 @Component
@@ -21,6 +23,11 @@ export default class LineUp extends Vue {
     default: () => []
   })
   private selection!: number[];
+
+  @Prop({
+    required: true
+  })
+  private loaded!: number;
 
   private lineup: Taggle | null = null;
 
@@ -68,6 +75,13 @@ export default class LineUp extends Vue {
 
     b.column(buildNumberColumn('overall_score', [0, 1]).label('Score'));
 
+    for (const metric of integralMetricTypes) {
+      b.column(buildNumberColumn(`details.${metric.id}`, [0, 1]).label(metric.name).description(metric.detail));
+    }
+    for (const metric of thresholdMetricTypes) {
+      b.column(buildNumberColumn(`details.${metric.id}`, [0, 1]).label(metric.name).description(metric.detail || metric.name));
+    }
+
     b.column(buildActionsColumn().label('&nbsp;').width(30).action({
       name: 'Show Details',
       icon: 'zoom_in',
@@ -78,7 +92,9 @@ export default class LineUp extends Vue {
     b.deriveColors();
 
     b.ranking(buildRanking()
-      .aggregate().rank().selection().allColumns()
+      .aggregate().rank().selection()
+      .column('team_name').column('approach_name').column('approach_uses_external_data')
+      .column('overall_score')
       .sortBy('overall_score', 'desc')
     );
 
@@ -88,7 +104,10 @@ export default class LineUp extends Vue {
     });
 
     this.patchLineUp();
+    this.updateLineUp = debounce(() => this.lineup!.update(), 300);
   }
+
+  private updateLineUp: (() => any) = () => undefined;
 
   private patchLineUp() {
     // patch switch button
@@ -103,13 +122,17 @@ export default class LineUp extends Vue {
 
   @Watch('data')
   private onDataChanged() {
-    // render lineup
     (this.lineup!.data as LocalDataProvider).setData(this.data);
   }
 
   @Watch('selection')
   private onSelectionChanged() {
     this.lineup!.setSelection(this.selection);
+  }
+
+  @Watch('loaded')
+  private onLoadingChanged() {
+    this.updateLineUp();
   }
 
   @Emit('open')

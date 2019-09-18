@@ -1,7 +1,7 @@
 <template>
   <div class="main">
     <div class="wrapper">
-      <LineUp :data="submissions" @open="open($event)" :selection="selection" @selectionChanged="selection = $event"/>
+      <LineUp :data="submissions" @open="open($event)" :selection="selection" @selectionChanged="selection = $event" :loaded="loaded"/>
     </div>
     <details-dialog v-if="focus" :submission="focus" />
     <Plots v-if="selection.length > 0" :selection="selectedRows" />
@@ -33,7 +33,7 @@ export default class Analyze extends Vue {
   })
   private challenge!: string;
 
-  private loading = true;
+  private loaded = 0;
   private selection: number[] = [];
   private submissions: ISubmissionSummary[] = [];
   private focus: ISubmissionSummary | null = null;
@@ -58,12 +58,11 @@ export default class Analyze extends Vue {
 
   private fetchData() {
     this.submissions = [];
+    this.loaded = 0;
     getByTeam(this.baseUrl, this.challenge).then((data) => {
       this.submissions = data.results;
-      for (const s of this.submissions) {
-        fetchDetails(this.baseUrl, s);
-      }
-    });
+      return Promise.all(this.submissions.map((s) => fetchDetails(this.baseUrl, s).then(() => this.loaded++)));
+    }).then(() => this.loaded = -1);
   }
 
   private open(s: ISubmissionSummary) {
