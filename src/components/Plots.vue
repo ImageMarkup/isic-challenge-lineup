@@ -4,11 +4,13 @@
       <ul class="tabs">
         <li class="tab"><a class="active" href="#bySubmission">by Submission</a></li>
         <li class="tab"><a href="#byClass">by Class</a></li>
+        <li class="tab"><a href="#byMetric">by Metric</a></li>
       </ul>
       <a class="btn btn-flat waves-effect waves-light" @click="toggleFullscreen()"><i class="material-icons">{{ closeIcon }}</i></a>
     </div>
     <by-submission :selection="selection" class="wrapper" id="bySubmission" />
     <by-class :selection="selection" class="wrapper" id="byClass" />
+    <by-metric :selection="selection" class="wrapper" id="byMetric" />
   </aside>
 </template>
 
@@ -20,12 +22,14 @@ import {format} from 'd3-format';
 import { ISubmissionSummary } from '../model';
 import BySubmission from './BySubmission.vue';
 import ByClass from './ByClass.vue';
+import ByMetric from './ByMetric.vue';
 
 @Component({
   components: {
     RocChart,
     BySubmission,
-    ByClass
+    ByClass,
+    ByMetric
   }
 })
 export default class Plots extends Vue {

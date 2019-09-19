@@ -21,7 +21,7 @@ import { schemeDark2 } from 'd3-scale-chromatic';
     RocChart
   }
 })
-export default class Plots extends Vue {
+export default class ByClass extends Vue {
   @Prop({
     required: true
   })
@@ -49,7 +49,7 @@ export default class Plots extends Vue {
 <style lang="scss" scoped>
 
 .chart {
-  max-width: 25vw;
+  width: 25vw;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;

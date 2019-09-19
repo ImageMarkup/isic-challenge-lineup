@@ -20,7 +20,7 @@ import { possibleCategories } from './constants';
     RocChart
   }
 })
-export default class Plots extends Vue {
+export default class BySubmission extends Vue {
   @Prop({
     required: true
   })
@@ -42,6 +42,6 @@ export default class Plots extends Vue {
 <style lang="scss" scoped>
 
 .chart {
-  max-width: 25vw;
+  width: 25vw;
 }
 </style>
