@@ -83,6 +83,13 @@ export default class LineUp extends Vue {
         .asArray(possibleCategories.map((d) => d.id))
         .label(`${metric.name} Details`).description(metric.detail)
         .custom('accessor', (row: {v: ISubmissionSummary}) => row.v.details ? row.v.details.scores.map((d) => d[metric.id]) : null));
+
+      // single sub set version
+      possibleCategories.forEach((cat, i) => {
+        b.column(buildNumberColumn(`${metric.id}-${cat.id}`, [0, 1])
+          .label(`${metric.name} of ${cat.id}`).description(metric.detail)
+          .custom('accessor', (row: {v: ISubmissionSummary}) => row.v.details ? row.v.details.scores[i]![metric.id] : null));
+      });
     }
 
     b.column(buildActionsColumn().label('&nbsp;').width(30).action({
