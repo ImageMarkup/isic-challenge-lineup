@@ -34,7 +34,7 @@ interface IScore {
   specificity: number;
 }
 
-interface IRocEntry {
+export interface IRocEntry {
   fpr: number;
   tpr: number;
   threshold: number;
