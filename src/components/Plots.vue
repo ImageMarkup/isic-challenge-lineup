@@ -8,9 +8,15 @@
       </ul>
       <a class="btn btn-flat waves-effect waves-light" @click="toggleFullscreen()"><i class="material-icons">{{ closeIcon }}</i></a>
     </div>
-    <by-submission :selection="selection" class="wrapper" id="bySubmission" />
-    <by-class :selection="selection" class="wrapper" id="byClass" />
-    <by-metric :selection="selection" class="wrapper" id="byMetric" />
+    <div id="bySubmission" class="wrapper">
+      <by-submission :selection="selection" v-if="active == 'bySubmission'"/>
+    </div>
+    <div id="byClass" class="wrapper">
+      <by-class :selection="selection" v-if="active == 'byClass'"/>
+    </div>
+    <div id="byMetric" class="wrapper">
+      <by-metric :selection="selection" v-if="active == 'byMetric'"/>
+    </div>
   </aside>
 </template>
 
@@ -42,10 +48,16 @@ export default class Plots extends Vue {
   })
   private fullscreen!: boolean;
 
+  private active = 'bySubmission';
+
   private f = format('.4f');
 
   public mounted() {
-    Tabs.init(this.$el.querySelector('.tabs')!);
+    Tabs.init(this.$el.querySelector('.tabs')!, {
+      onShow: (elem) => {
+        this.active = elem.id;
+      }
+    });
   }
 
   get closeIcon() {
@@ -81,12 +93,18 @@ export default class Plots extends Vue {
 .wrapper {
   flex: 1 1 0;
   display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  overflow: auto;
+  flex-direction: column;
 
   &.active {
     display: flex !important;
+  }
+
+  > * {
+    flex: 1 1 0;
+    overflow: auto;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
   }
 }
 
