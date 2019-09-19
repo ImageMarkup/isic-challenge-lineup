@@ -30,8 +30,21 @@ export default class RocChart extends Vue {
       return simple.map(map);
     };
 
+    const reference: any = {
+      label: 'Reference',
+      backgroundColor: 'black',
+      borderColor: 'black',
+      borderWidth: 1,
+      borderDash: [4, 2],
+      pointRadius: 1,
+      spanGaps: true,
+      showLine: true,
+      fill: false,
+      data: [{ x: 0, y: 0 }, { x: 1, y: 1 }]
+    };
+
     (this as any).renderChart({
-      datasets: possibleCategories.map((d) => ({
+      datasets: [reference].concat(possibleCategories.map((d) => ({
         label: d.id,
         backgroundColor: d.color,
         borderColor: d.color,
@@ -40,7 +53,7 @@ export default class RocChart extends Vue {
         showLine: true,
         fill: false,
         data: this.summary.details ? generateData(d.id) : []
-      })),
+      }))),
     }, {
         title: {
           display: true,
