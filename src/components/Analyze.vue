@@ -1,10 +1,10 @@
 <template>
   <div class="main">
-    <div class="wrapper">
+    <div class="wrapper" v-show="!fullscreen">
       <LineUp :data="submissions" @open="open($event)" :selection="selection" @selectionChanged="selection = $event" :loaded="loaded"/>
     </div>
     <details-dialog v-if="focus" :submission="focus" />
-    <Plots v-if="selection.length > 0" :selection="selectedRows" />
+    <Plots :class="{ wide: fullscreen}" v-if="selection.length > 0" :selection="selectedRows" @toggle="fullscreen = !fullscreen" :fullscreen="fullscreen"/>
   </div>
 </template>
 
@@ -37,6 +37,7 @@ export default class Analyze extends Vue {
   private selection: number[] = [];
   private submissions: ISubmissionSummary[] = [];
   private focus: ISubmissionSummary | null = null;
+  private fullscreen = false;
 
   public created() {
     this.fetchData();
@@ -89,6 +90,10 @@ export default class Analyze extends Vue {
 
 .plots {
   min-width: 20vw;
+}
+
+.wide {
+  flex: 1 1 0;
 }
 
 .wrapper {
