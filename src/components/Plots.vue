@@ -1,10 +1,17 @@
 <template>
   <aside class="plots">
-    <div class="wrapper">
-      <article v-for="s in selection" :key="s.submission_id">
-        <h6>{{s.team_name}} ({{s.overall_score}})</h6>
+    <ul class="tabs">
+      <li class="tab"><a class="active" href="#bySubmission">by Submission</a></li>
+      <li class="tab"><a href="#byClass">by Class</a></li>
+    </ul>
+    <div class="wrapper" id="bySubmission">
+      <article v-for="s in selection.slice(0, 3)" :key="s.submission_id">
+        <h6>{{s.team_name}} ({{f(s.overall_score)}})</h6>
         <roc-chart :summary="s" />
       </article>
+    </div>
+    <div class="wrapper" id="byClass">
+
     </div>
   </aside>
 </template>
@@ -12,6 +19,8 @@
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator';
 import RocChart from './RocChart';
+import { Tabs } from 'materialize-css';
+import {format} from 'd3-format';
 import { ISubmissionSummary } from '../model';
 
 @Component({
@@ -24,6 +33,12 @@ export default class Plots extends Vue {
     required: true
   })
   private selection!: ISubmissionSummary[];
+
+  private f = format('.4f');
+
+  public mounted() {
+    Tabs.init(this.$el.querySelector('.tabs')!);
+  }
 }
 
 </script>
@@ -31,6 +46,8 @@ export default class Plots extends Vue {
 .plots {
   display: flex;
   flex-direction: column;
+  color: black;
+  min-width: 25vw;
 }
 
 .wrapper {
