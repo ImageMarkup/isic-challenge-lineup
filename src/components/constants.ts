@@ -1,4 +1,5 @@
 import { schemeSet3 } from 'd3-scale-chromatic';
+import { ECategory } from '@/model';
 
 export const aggregateMetricTypes = [
   {
@@ -104,4 +105,4 @@ export const possibleCategories = [
     id: 'UNK',
     name: 'None of the others / out of distribution',
   }
-].map((d, i) => Object.assign(d, { color: schemeSet3[i]}));
+].map((d, i) => Object.assign(d, { color: schemeSet3[i] }) as { id: ECategory, name: string, color: string });

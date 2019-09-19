@@ -1,7 +1,7 @@
 import { Scatter } from 'vue-chartjs';
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import { possibleCategories } from './constants';
-import { ISubmissionSummary, ECategory, IRocEntry } from '../model';
+import { ISubmissionSummary, ECategory, IRocEntry, ITypedScore } from '../model';
 import { simplifyLine } from '../data';
 
 @Component({
@@ -15,17 +15,16 @@ export default class RocChart extends Vue {
 
   public mounted() {
     const minArea = parseFloat(this.getParam('minArea', '0.001'));
-    // Overwriting base render method with actual data.
-    const generateData = (d: string) => {
-      const info = this.summary.details!.raw[d as ECategory];
-      if (!info) {
+
+    const generateData = (score: ITypedScore) => {
+      if (!score.roc) {
         return [];
       }
       const map = (entry: IRocEntry) => ({ x: entry.fpr, y: entry.tpr });
-      if (info.roc.length < 10) {
-        return info.roc.map(map);
+      if (score.roc.length < 10) {
+        return score.roc.map(map);
       }
-      const simplifier = simplifyLine(info.roc, (v) => v.fpr, (v) => v.tpr);
+      const simplifier = simplifyLine(score.roc, (v) => v.fpr, (v) => v.tpr);
       const simple = simplifier(minArea);
       return simple.map(map);
     };
@@ -44,7 +43,7 @@ export default class RocChart extends Vue {
     };
 
     (this as any).renderChart({
-      datasets: [reference].concat(possibleCategories.map((d) => ({
+      datasets: [reference].concat(possibleCategories.map((d, i) => ({
         label: d.id,
         backgroundColor: d.color,
         borderColor: d.color,
@@ -52,7 +51,7 @@ export default class RocChart extends Vue {
         spanGaps: true,
         showLine: true,
         fill: false,
-        data: this.summary.details ? generateData(d.id) : []
+        data: this.summary.details ? generateData(this.summary.details!.scores[i]) : []
       }))),
     }, {
         title: {

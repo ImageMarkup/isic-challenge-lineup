@@ -44,18 +44,6 @@ interface IScoreWithRoc extends IScore {
   roc: IRocEntry[];
 }
 
-export const enum EClass {
-  AK = 'AK',
-  BCC = 'BCC',
-  BKL = 'BKL',
-  DF = 'DF',
-  MEL = 'MEL',
-  NV = 'NV',
-  SCC = 'SCC',
-  UNK = 'UNK',
-  VASC = 'VASC'
-}
-
 export declare type ECategory = 'AK' | 'BCC' | 'BKL' | 'DF' | 'MEL' | 'NV' | 'SCC' | 'UNK' | 'VASC';
 
 export interface IRawSubmissionDetails {
@@ -63,7 +51,7 @@ export interface IRawSubmissionDetails {
   validation: number;
 
   aggregate: {
-    balanced_accuracy: number
+    balanced_accuracy: number;
   };
 
   macro_average: IScore;
@@ -79,10 +67,16 @@ export interface IRawSubmissionDetails {
   VASC: IScoreWithRoc;
 }
 
+export interface ITypedScore extends IScoreWithRoc {
+  id: ECategory;
+  name: string;
+  color: string;
+}
+
 
 export interface ISubmissionDetails extends IScore {
   overall: number;
   validation: number;
 
-  raw: IRawSubmissionDetails;
+  scores: ITypedScore[];
 }

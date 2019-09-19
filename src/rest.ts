@@ -1,4 +1,5 @@
 import { ISummaryResponse, ISubmissionSummary, IRawSubmissionDetails, ISubmissionDetails } from './model';
+import { possibleCategories } from './components/constants';
 
 
 // https://challenge.isic-archive.com/api/leaderboard/52/by-team?limit=200&offset=0
@@ -20,7 +21,7 @@ function parseDetails(data: IRawSubmissionDetails): ISubmissionDetails {
     overall: data.overall,
     validation: data.validation,
     ...data.macro_average,
-    raw: data
+    scores: possibleCategories.map((entry) => Object.assign({}, entry, data[entry.id] || {}))
   };
 }
 
