@@ -1,7 +1,7 @@
 <template>
   <div>
     <article v-for="metric in metrics" :key="metric.id">
-      <h6>{{metric.id}}</h6>
+      <h6>{{metric.name}}</h6>
       <grouped-bar-chart class="chart" :labels="categories.map((d) => d.id)" :datasets="generateItems(metric)" />
     </article>
   </div>
