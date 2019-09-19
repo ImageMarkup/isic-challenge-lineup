@@ -1,5 +1,5 @@
 import { Bar } from 'vue-chartjs';
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
 
 @Component({
   extends: Bar
@@ -15,6 +15,15 @@ export default class GroupedBarChart extends Vue {
   private labels!: string[];
 
   public mounted() {
+    this.update();
+  }
+
+  @Watch('datasets')
+  public onChange() {
+    this.update();
+  }
+
+  private update() {
     (this as any).renderChart({
       labels: this.labels,
       datasets: this.datasets.map((d) => ({

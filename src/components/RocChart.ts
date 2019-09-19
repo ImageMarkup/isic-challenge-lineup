@@ -1,5 +1,5 @@
 import { Scatter } from 'vue-chartjs';
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
 import { simplifyLine } from '../data';
 import { IRocEntry } from '../model';
 
@@ -10,9 +10,19 @@ export default class RocChart extends Vue {
   @Prop({
     required: true
   })
-  private lines!: Array<{id: string, color: string, roc: IRocEntry[]}>;
+  private lines!: Array<{ id: string, color: string, roc: IRocEntry[] }>;
+
 
   public mounted() {
+    this.update();
+  }
+
+  @Watch('lines')
+  public onChange() {
+    this.update();
+  }
+
+  public update() {
     const minArea = parseFloat(this.getParam('minArea', '0.001'));
 
     const generateData = (roc: IRocEntry[]) => {
