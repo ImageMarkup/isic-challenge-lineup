@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <nav>
+    <nav v-if="!givenChallenge">
       <div class="nav-wrapper">
         <form>
           <input id="baseUrl" placeholder="Base URL" v-model="baseUrl" required>
@@ -28,11 +28,20 @@ import { getByTeam } from './rest';
   },
 })
 export default class App extends Vue {
-  private baseUrl = 'https://challenge.isic-archive.com/api';
-  private challenge = '52';
+  private baseUrl = this.getParam('baseUrl', 'https://challenge.isic-archive.com/api');
+  private challenge = this.getParam('challenge', '52');
 
   public mounted() {
     M.AutoInit();
+  }
+
+  private getParam(key: string, defaultValue: string) {
+    const s = new URL(window.location.href).searchParams;
+    return s.has(key) ? s.get(key)! : defaultValue;
+  }
+
+  get givenChallenge() {
+    return this.getParam('challenge', '') !== '';
   }
 }
 
