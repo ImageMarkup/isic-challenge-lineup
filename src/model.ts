@@ -22,7 +22,7 @@ export interface ISummaryResponse {
   results: ISubmissionSummary[];
 }
 
-interface IScore {
+export interface IScore {
   accuracy: number;
   ap: number;
   auc: number;

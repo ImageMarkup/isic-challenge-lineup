@@ -1,5 +1,5 @@
 import { schemeSet3 } from 'd3-scale-chromatic';
-import { ECategory } from '@/model';
+import { ECategory, IScore } from '@/model';
 
 export const aggregateMetricTypes = [
   {
@@ -29,7 +29,7 @@ export const integralMetricTypes = [
     name: 'Average Precision',
     detail: 'Area under the interpolated precision-recall (PR) curve',
   },
-];
+] as Array<{ id: keyof IScore, name: string, detail: string}>;
 
 
 
@@ -37,6 +37,7 @@ export const thresholdMetricTypes = [
   {
     id: 'accuracy',
     name: 'Accuracy',
+    detail: 'Accuracy',
   },
   {
     id: 'sensitivity',
@@ -62,7 +63,7 @@ export const thresholdMetricTypes = [
     name: 'NPV',
     detail: 'Negative Predictive Value',
   },
-];
+] as Array<{ id: keyof IScore, name: string, detail: string }>;
 
 export const possibleCategories = [
   {
@@ -81,10 +82,10 @@ export const possibleCategories = [
     id: 'AK',
     name: 'Actinic keratosis',
   },
-  {
-    id: 'AKIEC',
-    name: 'Actinic keratosis / Bowen’s disease (intraepithelial carcinoma)',
-  },
+  // {
+  //   id: 'AKIEC',
+  //   name: 'Actinic keratosis / Bowen’s disease (intraepithelial carcinoma)',
+  // },
   {
     id: 'BKL',
     name: 'Benign keratosis (solar lentigo / seborrheic keratosis / lichen planus-like keratosis)',

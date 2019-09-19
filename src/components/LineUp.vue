@@ -7,7 +7,7 @@ import { Component, Prop, Vue, Watch, Emit } from 'vue-property-decorator';
 import { ISubmissionSummary } from '../model';
 import { builder, Taggle, LocalDataProvider, buildStringColumn, buildNumberColumn, buildRanking, buildBooleanColumn, buildCategoricalColumn, buildActionsColumn } from 'lineupjs';
 import { debounce } from 'lodash';
-import { integralMetricTypes, thresholdMetricTypes } from './constants';
+import { integralMetricTypes, thresholdMetricTypes, possibleCategories } from './constants';
 
 
 @Component
@@ -75,11 +75,14 @@ export default class LineUp extends Vue {
 
     b.column(buildNumberColumn('overall_score', [0, 1]).label('Score'));
 
-    for (const metric of integralMetricTypes) {
+    for (const metric of integralMetricTypes.concat(thresholdMetricTypes)) {
       b.column(buildNumberColumn(`details.${metric.id}`, [0, 1]).label(metric.name).description(metric.detail));
-    }
-    for (const metric of thresholdMetricTypes) {
-      b.column(buildNumberColumn(`details.${metric.id}`, [0, 1]).label(metric.name).description(metric.detail || metric.name));
+
+      // array versions
+      b.column(buildNumberColumn(`${metric.id}s`, [0, 1])
+        .asArray(possibleCategories.map((d) => d.id))
+        .label(`${metric.name} Details`).description(metric.detail)
+        .custom('accessor', (row: {v: ISubmissionSummary}) => row.v.details ? row.v.details.scores.map((d) => d[metric.id]) : null));
     }
 
     b.column(buildActionsColumn().label('&nbsp;').width(30).action({
