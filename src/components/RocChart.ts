@@ -13,8 +13,8 @@ export default class RocChart extends Vue {
   })
   private summary!: ISubmissionSummary;
 
-
   public mounted() {
+    const minArea = parseFloat(this.getParam('minArea', '0.001'));
     // Overwriting base render method with actual data.
     const generateData = (d: string) => {
       const info = this.summary.details!.raw[d as ECategory];
@@ -26,7 +26,7 @@ export default class RocChart extends Vue {
         return info.roc.map(map);
       }
       const simplifier = simplifyLine(info.roc, (v) => v.fpr, (v) => v.tpr);
-      const simple = simplifier(0.0001);
+      const simple = simplifier(minArea);
       return simple.map(map);
     };
 
@@ -78,5 +78,10 @@ export default class RocChart extends Vue {
           }]
         }
     });
+  }
+
+  private getParam(key: string, defaultValue: string) {
+    const s = new URL(window.location.href).searchParams;
+    return s.has(key) ? s.get(key)! : defaultValue;
   }
 }
