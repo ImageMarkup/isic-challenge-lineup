@@ -1,4 +1,4 @@
-import { schemeSet3 } from 'd3-scale-chromatic';
+import { schemeSet3, schemeCategory10 } from 'd3-scale-chromatic';
 import { ECategory, IScore } from '@/model';
 
 export const aggregateMetricTypes = [
@@ -11,6 +11,11 @@ by the positive incidences) is the balanced multiclass accuracy`,
     primary: true,
   }
 ];
+
+const colors = schemeCategory10.slice();
+function colorize(d: { id: string, name: string, detail: string }, i: number) {
+  return Object.assign(d, { color: colors.pop()! }) as { id: keyof IScore, name: string, detail: string, color: string };
+}
 
 export const integralMetricTypes = [
   {
@@ -29,7 +34,7 @@ export const integralMetricTypes = [
     name: 'Average Precision',
     detail: 'Area under the interpolated precision-recall (PR) curve',
   },
-] as Array<{ id: keyof IScore, name: string, detail: string}>;
+].map(colorize);
 
 
 
@@ -47,6 +52,7 @@ export const thresholdMetricTypes = [
   {
     id: 'specificity',
     name: 'Specificity',
+    detail: 'Specificity',
   },
   {
     id: 'dice',
@@ -63,7 +69,7 @@ export const thresholdMetricTypes = [
     name: 'NPV',
     detail: 'Negative Predictive Value',
   },
-] as Array<{ id: keyof IScore, name: string, detail: string }>;
+].map(colorize);
 
 export const possibleCategories = [
   {
