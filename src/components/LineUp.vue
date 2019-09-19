@@ -5,7 +5,8 @@
 <script lang="ts">
 import { Component, Prop, Vue, Watch, Emit } from 'vue-property-decorator';
 import { ISubmissionSummary } from '../model';
-import { builder, Taggle, LocalDataProvider, buildStringColumn, buildNumberColumn, buildRanking, buildBooleanColumn, buildCategoricalColumn, buildActionsColumn } from 'lineupjs';
+import { builder, Taggle, LocalDataProvider, buildStringColumn, buildNumberColumn, buildRanking, buildBooleanColumn, buildCategoricalColumn, buildActionsColumn,
+createSelectionDesc, createAggregateDesc, createStackDesc, StackColumn, createRankDesc } from 'lineupjs';
 import { debounce } from 'lodash';
 import { integralMetricTypes, thresholdMetricTypes, possibleCategories } from './constants';
 
@@ -103,17 +104,36 @@ export default class LineUp extends Vue {
       action: (row: {v: ISubmissionSummary}) => this.open(row.v)
     }));
 
-    b.ranking(buildRanking()
-      .aggregate().rank().selection()
-      .column('team_name')
-      .column('overall_score')
-      .column({
-        type: 'weightedSum',
-        columns: possibleCategories.map((cat) => `accuracy-${cat.id}`),
-        weights: possibleCategories.map(() => 1)
-      })
-      .sortBy('overall_score', 'desc')
-    );
+    b.ranking((data) => {
+      const r = data.pushRanking();
+      const descs = data.getColumns();
+      const byColumn = new Map(descs.map((d) => [(d as any).column as string, d]));
+      data.push(r, createAggregateDesc());
+      data.push(r, createRankDesc());
+      data.push(r, createSelectionDesc());
+      data.push(r, byColumn.get('team_name')!);
+      const score = data.push(r, byColumn.get('overall_score')!)!;
+
+      const stack = data.create(createStackDesc('Weighted Accuracy'))! as StackColumn;
+      for (const cat of possibleCategories) {
+         stack.push(data.create(byColumn.get(`accuracy-${cat.id}`)!)!);
+      }
+      stack.setWidth(500);
+      r.push(stack);
+
+      r.sortBy(score, false);
+    });
+    // b.ranking(buildRanking()
+    //   .aggregate().rank().selection()
+    //   .column('team_name')
+    //   .column('overall_score')
+    //   .column({
+    //     type: 'weightedSum',
+    //     columns: possibleCategories.map((cat) => `accuracy-${cat.id}`),
+    //     weights: possibleCategories.map(() => 1)
+    //   })
+    //   .sortBy('overall_score', 'desc')
+    // );
 
     this.lineup = b.buildTaggle(this.$el as HTMLElement);
     this.lineup.on('selectionChanged', (indices) => {
