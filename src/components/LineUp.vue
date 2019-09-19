@@ -33,6 +33,7 @@ export default class LineUp extends Vue {
 
   public mounted() {
     const b = builder(this.data);
+    b.disableAdvancedUIFeatures();
         // {
         //   text: 'Used External Data',
         //   subText: `${this.usedExternalCount} yes`,
@@ -76,19 +77,22 @@ export default class LineUp extends Vue {
     b.column(buildNumberColumn('overall_score', [0, 1]).label('Score'));
 
     for (const metric of integralMetricTypes.concat(thresholdMetricTypes)) {
-      b.column(buildNumberColumn(`details.${metric.id}`, [0, 1]).label(metric.name).color(metric.color).description(metric.detail));
+      b.column(buildNumberColumn(`details.${metric.id}`, [0, 1]).numberFormat('.4f').label(metric.name).color(metric.color).description(metric.detail));
 
       // array versions
       b.column(buildNumberColumn(`${metric.id}s`, [0, 1])
         .asArray(possibleCategories.map((d) => d.id))
         .label(`${metric.name} Details`).description(metric.detail).color(metric.color)
-        .custom('accessor', (row: {v: ISubmissionSummary}) => row.v.details ? row.v.details.scores.map((d) => d[metric.id]) : null));
+        .custom('accessor', (row: {v: ISubmissionSummary}) => row.v.details ? row.v.details.scores.map((d) => d[metric.id]) : null)
+        .numberFormat('.4f'));
 
       // single sub set version
       possibleCategories.forEach((cat, i) => {
         b.column(buildNumberColumn(`${metric.id}-${cat.id}`, [0, 1])
           .label(`${metric.name} of ${cat.id}`).description(metric.detail).color(cat.color)
-          .custom('accessor', (row: {v: ISubmissionSummary}) => row.v.details ? row.v.details.scores[i]![metric.id] : null));
+          .custom('accessor', (row: {v: ISubmissionSummary}) => row.v.details ? row.v.details.scores[i]![metric.id] : null)
+          .numberFormat('.4f')
+        );
       });
     }
 
@@ -101,8 +105,13 @@ export default class LineUp extends Vue {
 
     b.ranking(buildRanking()
       .aggregate().rank().selection()
-      .column('team_name').column('approach_name').column('approach_uses_external_data')
+      .column('team_name')
       .column('overall_score')
+      .column({
+        type: 'weightedSum',
+        columns: possibleCategories.map((cat) => `accuracy-${cat.id}`),
+        weights: possibleCategories.map(() => 1)
+      })
       .sortBy('overall_score', 'desc')
     );
 
