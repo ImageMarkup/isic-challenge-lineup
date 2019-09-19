@@ -7,15 +7,8 @@
       </ul>
       <a class="btn btn-flat waves-effect waves-light" @click="toggleFullscreen()"><i class="material-icons">{{ closeIcon }}</i></a>
     </div>
-    <div class="wrapper" id="bySubmission">
-      <article v-for="s in selection.slice(0, 3)" :key="s.submission_id">
-        <h6>{{s.team_name}} ({{f(s.overall_score)}})</h6>
-        <roc-chart :summary="s" />
-      </article>
-    </div>
-    <div class="wrapper" id="byClass">
-
-    </div>
+    <by-submission :selection="selection" class="wrapper" id="bySubmission" />
+    <by-class :selection="selection" class="wrapper" id="byClass" />
   </aside>
 </template>
 
@@ -25,10 +18,14 @@ import RocChart from './RocChart';
 import { Tabs } from 'materialize-css';
 import {format} from 'd3-format';
 import { ISubmissionSummary } from '../model';
+import BySubmission from './BySubmission.vue';
+import ByClass from './ByClass.vue';
 
 @Component({
   components: {
-    RocChart
+    RocChart,
+    BySubmission,
+    ByClass
   }
 })
 export default class Plots extends Vue {
@@ -64,6 +61,7 @@ export default class Plots extends Vue {
   flex-direction: column;
   color: black;
   min-width: 25vw;
+  max-width: 30vw;
 }
 
 .panel {
@@ -78,7 +76,14 @@ export default class Plots extends Vue {
 
 .wrapper {
   flex: 1 1 0;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
   overflow: auto;
+
+  &.active {
+    display: flex !important;
+  }
 }
 
 </style>

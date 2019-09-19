@@ -94,6 +94,7 @@ export default class Analyze extends Vue {
 
 .wide {
   flex: 1 1 0;
+  max-width: unset !important;
 }
 
 .wrapper {
