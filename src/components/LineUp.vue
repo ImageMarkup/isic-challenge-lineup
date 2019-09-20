@@ -90,9 +90,9 @@ export default class LineUp extends Vue {
       // single sub set version
       possibleCategories.forEach((cat, i) => {
         b.column(buildNumberColumn(`${metric.id}-${cat.id}`, [0, 1])
-          .label(`${metric.name} of ${cat.id}`).description(metric.detail).color(cat.color)
+          .label(`${cat.id} ${metric.name}`).description(metric.detail).color(cat.color)
           .custom('accessor', (row: {v: ISubmissionSummary}) => row.v.details ? row.v.details.scores[i]![metric.id] : null)
-          .numberFormat('.4f')
+          .numberFormat('.3f')
         );
       });
     }
@@ -118,7 +118,7 @@ export default class LineUp extends Vue {
       for (const cat of possibleCategories) {
          stack.push(data.create(byColumn.get(`accuracy-${cat.id}`)!)!);
       }
-      stack.setWidth(500);
+      stack.setWidth(possibleCategories.length * 85);
       r.push(stack);
 
       r.sortBy(score, false);

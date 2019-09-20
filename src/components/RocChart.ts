@@ -1,6 +1,5 @@
 import { Scatter } from 'vue-chartjs';
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
-import { simplifyLine } from '../data';
 import { IRocEntry } from '../model';
 
 @Component({
@@ -23,21 +22,6 @@ export default class RocChart extends Vue {
   }
 
   public update() {
-    const minArea = parseFloat(this.getParam('minArea', '0.001'));
-
-    const generateData = (roc: IRocEntry[]) => {
-      if (!roc) {
-        return [];
-      }
-      const map = (entry: IRocEntry) => ({ x: entry.fpr, y: entry.tpr });
-      if (roc.length < 10) {
-        return roc.map(map);
-      }
-      const simplifier = simplifyLine(roc, (v) => v.fpr, (v) => v.tpr);
-      const simple = simplifier(minArea);
-      return simple.map(map);
-    };
-
     const reference: any = {
       label: 'Reference',
       backgroundColor: 'black',
@@ -60,36 +44,31 @@ export default class RocChart extends Vue {
         spanGaps: true,
         showLine: true,
         fill: false,
-        data: generateData(d.roc)
+        data: d.roc ? d.roc.map((entry) => ({ x: entry.fpr, y: entry.tpr })) : []
       }))),
     }, {
-        title: {
-          display: true,
-          text: 'RoC Curve',
-          position: 'top'
-        },
-        legend: {
-          position: 'bottom'
-        },
-        scales: {
-          xAxes: [{
-            scaleLabel: {
-              display: true,
-              labelString: 'FPR'
-            }
-          }],
-          yAxes: [{
-            scaleLabel: {
-              display: true,
-              labelString: 'TPR'
-            }
-          }]
-        }
+      title: {
+        display: true,
+        text: 'RoC Curve',
+        position: 'top'
+      },
+      legend: {
+        position: 'bottom'
+      },
+      scales: {
+        xAxes: [{
+          scaleLabel: {
+            display: true,
+            labelString: 'FPR'
+          }
+        }],
+        yAxes: [{
+          scaleLabel: {
+            display: true,
+            labelString: 'TPR'
+          }
+        }]
+      }
     });
-  }
-
-  private getParam(key: string, defaultValue: string) {
-    const s = new URL(window.location.href).searchParams;
-    return s.has(key) ? s.get(key)! : defaultValue;
   }
 }
