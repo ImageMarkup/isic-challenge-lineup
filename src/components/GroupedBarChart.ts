@@ -32,6 +32,7 @@ export default class GroupedBarChart extends Vue {
         data: d.data
       })),
     }, {
+        animation: false,
         legend: {
           position: 'bottom'
         }

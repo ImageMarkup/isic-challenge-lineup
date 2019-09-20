@@ -47,6 +47,7 @@ export default class RocChart extends Vue {
         data: d.roc ? d.roc.map((entry) => ({ x: entry.fpr, y: entry.tpr })) : []
       }))),
     }, {
+      animation: false,
       title: {
         display: true,
         text: 'RoC Curve',
