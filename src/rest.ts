@@ -34,8 +34,17 @@ function parseDetails(data: IRawSubmissionDetails): ISubmissionDetails {
     overall: data.overall,
     validation: data.validation,
     ...data.macro_average,
-    scores: possibleCategories.map((entry) => Object.assign({}, entry, data[entry.id] || {}, {
-      roc: data[entry.id] ? simplify(data[entry.id].roc || []) : []
+    scores: possibleCategories.map((entry) => Object.assign({}, entry, {
+      accuracy: data.accuracy[entry.id],
+      ap: data.ap[entry.id],
+      auc: data.auc[entry.id],
+      auc_sens_80: data.auc_sens_80[entry.id],
+      dice: data.dice[entry.id],
+      npv: data.npv[entry.id],
+      ppv: data.ppv[entry.id],
+      sensitivity: data.sensitivity[entry.id],
+      specificity: data.specificity[entry.id],
+      roc: data.roc[entry.id] ? simplify(data.roc[entry.id] || []) : []
     }))
   };
 }

@@ -22,16 +22,16 @@ export interface ISummaryResponse {
   results: ISubmissionSummary[];
 }
 
-export interface IScore {
-  accuracy: number;
-  ap: number;
-  auc: number;
-  auc_sens_80: number;
-  dice: number;
-  npv: number;
-  ppv: number;
-  sensitivity: number;
-  specificity: number;
+export interface IScore<T = number> {
+  accuracy: T;
+  ap: T;
+  auc: T;
+  auc_sens_80: T;
+  dice: T;
+  npv: T;
+  ppv: T;
+  sensitivity: T;
+  specificity: T;
 }
 
 export interface IRocEntry {
@@ -40,13 +40,21 @@ export interface IRocEntry {
   threshold: number;
 }
 
-interface IScoreWithRoc extends IScore {
-  roc: IRocEntry[];
+export interface IByType<T> {
+  AK: T;
+  BCC: T;
+  BKL: T;
+  DF: T;
+  MEL: T;
+  NV: T;
+  SCC: T;
+  UNK: T;
+  VASC: T;
 }
 
 export declare type ECategory = 'AK' | 'BCC' | 'BKL' | 'DF' | 'MEL' | 'NV' | 'SCC' | 'UNK' | 'VASC';
 
-export interface IRawSubmissionDetails {
+export interface IRawSubmissionDetails extends IScore<IByType<number>> {
   overall: number;
   validation: number;
 
@@ -56,21 +64,24 @@ export interface IRawSubmissionDetails {
 
   macro_average: IScore;
 
-  AK: IScoreWithRoc;
-  BCC: IScoreWithRoc;
-  BKL: IScoreWithRoc;
-  DF: IScoreWithRoc;
-  MEL: IScoreWithRoc;
-  NV: IScoreWithRoc;
-  SCC: IScoreWithRoc;
-  UNK: IScoreWithRoc;
-  VASC: IScoreWithRoc;
+  accuracy: IByType<number>;
+  ap: IByType<number>;
+  auc: IByType<number>;
+  auc_sens_80: IByType<number>;
+  dice: IByType<number>;
+  npv: IByType<number>;
+  ppv: IByType<number>;
+  sensitivity: IByType<number>;
+  specificity: IByType<number>;
+  roc: IByType<IRocEntry[]>;
 }
 
-export interface ITypedScore extends IScoreWithRoc {
+export interface ITypedScore extends IScore {
   id: ECategory;
   name: string;
   color: string;
+
+  roc: IRocEntry[];
 }
 
 
