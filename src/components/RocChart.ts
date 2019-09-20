@@ -58,12 +58,20 @@ export default class RocChart extends Vue {
       },
       scales: {
         xAxes: [{
+          ticks: {
+            min: 0,
+            max: 1
+          },
           scaleLabel: {
             display: true,
             labelString: 'FPR'
           }
         }],
         yAxes: [{
+          ticks: {
+            min: 0,
+            max: 1
+          },
           scaleLabel: {
             display: true,
             labelString: 'TPR'

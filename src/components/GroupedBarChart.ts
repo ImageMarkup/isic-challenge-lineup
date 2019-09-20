@@ -35,6 +35,14 @@ export default class GroupedBarChart extends Vue {
         animation: false,
         legend: {
           position: 'bottom'
+        },
+        scales: {
+          yAxes: [{
+            ticks: {
+              min: 0,
+              max: 1
+            }
+          }]
         }
     });
   }
