@@ -76,7 +76,7 @@ export default class Plots extends Vue {
   display: flex;
   flex-direction: column;
   color: black;
-  min-width: 25vw;
+  min-width: 30rem;
   max-width: 30vw;
 }
 

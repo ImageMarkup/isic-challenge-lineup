@@ -49,7 +49,7 @@ export default class ByClass extends Vue {
 <style lang="scss" scoped>
 
 .chart {
-  width: 25vw;
+  width: 30rem;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;

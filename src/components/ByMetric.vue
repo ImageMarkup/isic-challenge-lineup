@@ -46,6 +46,6 @@ export default class ByMetric extends Vue {
 <style lang="scss" scoped>
 
 .chart {
-  width: 25vw;
+  width: 30rem;
 }
 </style>
