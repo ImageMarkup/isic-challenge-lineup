@@ -7,7 +7,7 @@ import { Component, Prop, Vue, Watch, Emit } from 'vue-property-decorator';
 import { ISubmissionSummary } from '../model';
 import { builder, Taggle, LocalDataProvider, buildStringColumn, buildNumberColumn, buildRanking, buildBooleanColumn, buildCategoricalColumn, buildActionsColumn,
 createSelectionDesc, createAggregateDesc, createStackDesc, StackColumn, createRankDesc } from 'lineupjs';
-import { debounce } from 'lodash';
+import { throttle } from 'lodash';
 import { integralMetricTypes, thresholdMetricTypes, possibleCategories } from './constants';
 
 
@@ -141,7 +141,7 @@ export default class LineUp extends Vue {
     });
 
     this.patchLineUp();
-    this.updateLineUp = debounce(() => this.lineup!.update(), 300);
+    this.updateLineUp = throttle(() => this.lineup!.update(), 300);
   }
 
   private updateLineUp: (() => any) = () => undefined;
