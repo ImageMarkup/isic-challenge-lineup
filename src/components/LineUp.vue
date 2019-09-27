@@ -34,7 +34,6 @@ export default class LineUp extends Vue {
 
   public mounted() {
     const b = builder(this.data);
-    b.disableAdvancedUIFeatures();
         // {
         //   text: 'Used External Data',
         //   subText: `${this.usedExternalCount} yes`,
