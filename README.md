@@ -1,6 +1,6 @@
-# isic-challenge-leaderboard
-[![Github Actions](https://github.com/sgratzl/isic-challenge-leaderboard/workflows/nodeci/badge.svg)](https://github.com/sgratzl/isic-challenge-leaderboard/actions)
-[![Netlify Status](https://api.netlify.com/api/v1/badges/373a13b1-1480-4b3f-91e3-f2bc4f2f38c4/deploy-status)](https://app.netlify.com/sites/isic-challenge-leaderboard/deploys)
+# isic-challenge-lineup
+[![Github Actions](https://github.com/sgratzl/isic-challenge-lineup/workflows/nodeci/badge.svg)](https://github.com/sgratzl/isic-challenge-lineup/actions)
+[![Netlify Status](https://api.netlify.com/api/v1/badges/373a13b1-1480-4b3f-91e3-f2bc4f2f38c4/deploy-status)](https://app.netlify.com/sites/isic-challenge-lineup/deploys)
 
 ## Project setup
 ```

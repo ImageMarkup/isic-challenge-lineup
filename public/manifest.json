@@ -1,6 +1,6 @@
 {
-  "name": "isic-challenge-leaderboard",
-  "short_name": "isic-challenge-leaderboard",
+  "name": "isic-challenge-lineup",
+  "short_name": "isic-challenge-lineup",
   "icons": [
     {
       "src": "./img/icons/android-chrome-192x192.png",

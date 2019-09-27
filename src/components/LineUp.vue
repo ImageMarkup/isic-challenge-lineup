@@ -74,6 +74,20 @@ export default class LineUp extends Vue {
     ]).label('Used External Data')
       .custom('accessor', (row: {v: ISubmissionSummary}) => row.v.approach_uses_external_data ? 'y' : 'n'));
 
+    b.column(buildCategoricalColumn('with_metadata').categories([
+      {
+        label: 'yes',
+        name: 'y',
+        color: 'darkgreen'
+      },
+      {
+        label: 'no',
+        name: 'n',
+        color: 'darkred'
+      }
+    ]).label('With Meta Data')
+      .custom('accessor', (row: {v: ISubmissionSummary}) => row.v.with_metadata ? 'y' : 'n'));
+
     b.column(buildNumberColumn('overall_score', [0, 1]).label('Score'));
 
     for (const metric of integralMetricTypes.concat(thresholdMetricTypes)) {

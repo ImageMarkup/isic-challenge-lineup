@@ -6,6 +6,8 @@ export interface ISubmissionSummary {
   team_institution_name: string;
   team_institution_url: string;
 
+  with_metadata?: boolean;
+
   approach_name: string;
   approach_manuscript_url: string;
   approach_uses_external_data: boolean;
