@@ -29,7 +29,7 @@ import { getByTeam } from './rest';
 })
 export default class App extends Vue {
   private baseUrl = this.getParam('baseUrl', 'https://challenge.isic-archive.com/api');
-  private challenge = this.getParam('challenge', '52');
+  private challenge = this.getParam('challenge', '39');
 
   public mounted() {
     M.AutoInit();

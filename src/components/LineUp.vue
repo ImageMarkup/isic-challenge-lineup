@@ -4,7 +4,7 @@
 
 <script lang="ts">
 import { Component, Prop, Vue, Watch, Emit } from 'vue-property-decorator';
-import { ISubmissionSummary } from '../model';
+import { ISubmissionSummary, ITask } from '../model';
 import { builder, Taggle, LocalDataProvider, buildStringColumn, buildNumberColumn, buildRanking, buildBooleanColumn, buildCategoricalColumn, buildActionsColumn,
 createSelectionDesc, createAggregateDesc, createStackDesc, StackColumn, createRankDesc } from 'lineupjs';
 import { throttle } from 'lodash';
@@ -18,6 +18,11 @@ export default class LineUp extends Vue {
     default: () => []
   })
   private data!: ISubmissionSummary[];
+  @Prop({
+    required: true,
+    default: () => []
+  })
+  private tasks!: ITask[];
 
   @Prop({
     required: true,
@@ -74,19 +79,7 @@ export default class LineUp extends Vue {
     ]).label('Used External Data')
       .custom('accessor', (row: {v: ISubmissionSummary}) => row.v.approach_uses_external_data ? 'y' : 'n'));
 
-    b.column(buildCategoricalColumn('with_metadata').categories([
-      {
-        label: 'yes',
-        name: 'y',
-        color: 'darkgreen'
-      },
-      {
-        label: 'no',
-        name: 'n',
-        color: 'darkred'
-      }
-    ]).label('With Meta Data')
-      .custom('accessor', (row: {v: ISubmissionSummary}) => row.v.with_metadata ? 'y' : 'n'));
+    b.column(buildCategoricalColumn('taskName').categories(this.tasks.map((t) => t.name)).label('Task'));
 
     b.column(buildNumberColumn('overall_score', [0, 1]).label('Score'));
 
@@ -125,6 +118,7 @@ export default class LineUp extends Vue {
       data.push(r, createRankDesc());
       data.push(r, createSelectionDesc());
       data.push(r, byColumn.get('team_name')!);
+      data.push(r, byColumn.get('taskName')!);
       const score = data.push(r, byColumn.get('overall_score')!)!;
 
       const stack = data.create(createStackDesc('Weighted Accuracy'))! as StackColumn;

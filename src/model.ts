@@ -6,7 +6,8 @@ export interface ISubmissionSummary {
   team_institution_name: string;
   team_institution_url: string;
 
-  with_metadata?: boolean;
+  task?: ITask;
+  taskName?: string;
 
   approach_name: string;
   approach_manuscript_url: string;
@@ -19,7 +20,19 @@ export interface ISubmissionSummary {
   details?: ISubmissionDetails;
 }
 
-export interface ISummaryResponse {
+export interface ITask {
+  id: number;
+  name: string;
+  type: string;
+}
+
+export interface IChallengeResponse {
+  id: number;
+  name: string;
+  tasks: ITask[];
+}
+
+export interface ITaskSummaryResponse {
   count: number;
   results: ISubmissionSummary[];
 }

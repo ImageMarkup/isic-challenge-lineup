@@ -1,7 +1,7 @@
 <template>
   <div class="main">
     <div class="wrapper" v-show="!fullscreen">
-      <LineUp :data="submissions" @open="open($event)" :selection="selection" @selectionChanged="selection = $event" :loaded="loaded"/>
+      <LineUp v-if="tasks.length > 0" :data="submissions" @open="open($event)" :tasks="tasks" :selection="selection" @selectionChanged="selection = $event" :loaded="loaded"/>
     </div>
     <details-dialog v-if="focus" :submission="focus" />
     <Plots :class="{ wide: fullscreen}" v-if="selection.length > 0" :selection="selectedRows" @toggle="fullscreen = !fullscreen" :fullscreen="fullscreen"/>
@@ -13,8 +13,8 @@ import { Component, Vue, Prop, Watch } from 'vue-property-decorator';
 import LineUp from './LineUp.vue';
 import DetailsDialog from './DetailsDialog.vue';
 import Plots from './Plots.vue';
-import { ISubmissionSummary, ISubmissionDetails } from '../model';
-import { getByTeam, fetchDetails } from '../rest';
+import { ISubmissionSummary, ISubmissionDetails, ITask } from '../model';
+import { getByTeam, fetchDetails, getChallenge } from '../rest';
 
 @Component({
   components: {
@@ -33,6 +33,8 @@ export default class Analyze extends Vue {
   })
   private challenge!: string;
 
+  private name: string = 'Challenge';
+  private tasks: ITask[] = [];
   private loaded = 0;
   private selection: number[] = [];
   private submissions: ISubmissionSummary[] = [];
@@ -57,13 +59,27 @@ export default class Analyze extends Vue {
     this.fetchData();
   }
 
-  private fetchData() {
+  private async fetchData() {
     this.submissions = [];
+    this.tasks = [];
     this.loaded = 0;
-    getByTeam(this.baseUrl, this.challenge).then((data) => {
-      this.submissions = data.results;
-      return Promise.all(this.submissions.map((s) => fetchDetails(this.baseUrl, s).then(() => this.loaded++)));
-    }).then(() => this.loaded = -1);
+    const challenge = await getChallenge(this.baseUrl, this.challenge);
+
+    this.name = challenge.name;
+    this.tasks = challenge.tasks
+      .filter((t) => t.type === 'classification')
+      .map((t) => {
+        t.name = t.name.replace('Lesion Diagnosis: ', '');
+        return t;
+      });
+
+    const submissions = await Promise.all(this.tasks.map((t) => getByTeam(this.baseUrl, t.id).then((summary) => {
+      return summary.results.map((r) => Object.assign(r, {task: t, taskName: t.name}));
+    })));
+
+    this.submissions = ([] as ISubmissionSummary[]).concat(...submissions);
+    const done = Promise.all(this.submissions.map((s) => fetchDetails(this.baseUrl, s).then(() => this.loaded++)));
+    this.loaded = -1;
   }
 
   private open(s: ISubmissionSummary) {

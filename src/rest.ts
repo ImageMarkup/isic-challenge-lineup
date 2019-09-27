@@ -1,18 +1,26 @@
-import { ISummaryResponse, ISubmissionSummary, IRawSubmissionDetails, ISubmissionDetails, IRocEntry } from './model';
+import { ITaskSummaryResponse, ISubmissionSummary, IRawSubmissionDetails, ISubmissionDetails, IRocEntry, IChallengeResponse } from './model';
 import { possibleCategories } from './components/constants';
 import { simplifyLine } from './data';
 
 
-// https://challenge.isic-archive.com/api/leaderboard/52/by-team?limit=200&offset=0
+// https://challenge.isic-archive.com/api/challenge/39
 
-export function getByTeam(baseUrl: string, challenge: string): Promise<ISummaryResponse> {
-  return fetch(`${baseUrl}/leaderboard/${challenge}/by-team`, {
+export function getChallenge(baseUrl: string, challenge: string): Promise<IChallengeResponse> {
+  return fetch(`${baseUrl}/challenge/${challenge}`, {
     cache: 'force-cache'
   }).then((r) => r.json());
 }
 
-export function getByApproach(baseUrl: string, challenge: string): Promise<ISummaryResponse> {
-  return fetch(`${baseUrl}/leaderboard/${challenge}/by-approach`, {
+// https://challenge.isic-archive.com/api/leaderboard/52/by-team?limit=200&offset=0
+
+export function getByTeam(baseUrl: string, task: number): Promise<ITaskSummaryResponse> {
+  return fetch(`${baseUrl}/leaderboard/${task}/by-team`, {
+    cache: 'force-cache'
+  }).then((r) => r.json());
+}
+
+export function getByApproach(baseUrl: string, task: number): Promise<ITaskSummaryResponse> {
+  return fetch(`${baseUrl}/leaderboard/${task}/by-approach`, {
     cache: 'force-cache'
   }).then((r) => r.json());
 }
